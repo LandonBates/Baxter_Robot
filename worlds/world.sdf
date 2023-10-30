@@ -90,7 +90,7 @@
   <pose>0 0 0 0 0 0</pose>
   <include>
     <uri>file://models/baxter/baxter.sdf</uri>
-  </include>   
+  </include> 
   </model>
   </world>
 </sdf>

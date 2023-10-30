@@ -30,11 +30,11 @@ def generate_launch_description():
     with open(sdf_file, 'r') as infp:
         robot_desc = infp.read()
         
-    #camera = Node(
-    #    package='usb_cam',
-    #    executable='usb_cam_node_exe',
-    #    parameters=[robot_path+"/config/params_1.yaml"]
-    #)
+    camera = Node(
+        package='usb_cam',
+        executable='usb_cam_node_exe',
+        parameters=[robot_path+"/config/params_1.yaml"]
+    )
 
     rviz = Node(
         package='rviz2',
@@ -64,10 +64,18 @@ def generate_launch_description():
             {'robot_description': robot_desc},
         ]
     )
+    
+    joint_state_publisher_gui = Node(
+        package='joint_state_publisher_gui',
+        executable='joint_state_publisher_gui',
+        name='joint_state_publisher_gui',
+        arguments=[sdf_file],
+        output=['screen']
+    )
         
     # Bridge to forward tf and joint states to ros2
     gz_topic = '/model/baxter'
-    joint_state_gz_topic = '/worlds/empty' + gz_topic + '/joint_state'
+    joint_state_gz_topic = '/worlds/world' + gz_topic + '/joint_state'
     link_pose_gz_topic = gz_topic + '/pose'
     bridge = Node(
         package='ros_gz_bridge',
@@ -94,6 +102,7 @@ def generate_launch_description():
         SetEnvironmentVariable(name="GZ_SIM_RESOURCE_PATH", value=robot_path),
         bridge,
         robot_state_publisher,
+        joint_state_publisher_gui,
         rviz
     ])
 

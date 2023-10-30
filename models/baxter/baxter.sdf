@@ -51,14 +51,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file://models/baxter/meshes/base_link.DAE</uri>
+              <uri>file://models/baxter/meshes/H0.DAE</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='chin_collision'>
           <geometry>
             <mesh>
-              <uri>file://models/baxter/meshes/base_link.DAE</uri>
+              <uri>file://models/baxter/meshes/H0.DAE</uri>
             </mesh>
           </geometry>
         </collision>
@@ -106,13 +106,27 @@
 			  <parent>base_link</parent>
 			  <child>body</child>
 		  </joint>
-      <joint name='chin_joint' type='fixed'>
+      <joint name='chin_joint' type='revolute'>
 			  <parent>body</parent>
-			  <child>chin</child>		      
+			  <child>chin</child>
+			<axis>
+				<xyz>0 0 1</xyz>
+				<limit>
+				  <upper>1</upper>
+				  <lower>-1</lower>
+				</limit>
+			</axis>		      
 		  </joint>
-		  <joint name='head_joint' type='fixed'>
+		  <joint name='head_joint' type='revolute'>
 			  <parent>chin</parent>
 			  <child>head</child>
+			  <axis>
+			    <xyz>0 0 1</xyz>
+			    <limit>
+			      <upper>0.1</upper>
+			      <lower>-0.5</lower>
+			    </limit>
+			  </axis>
 		  </joint>
 		  	  <link name='camera_body'>
 		  <pose relative_to='head'>0.055 0.08 0 0 0 0</pose>
