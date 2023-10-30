@@ -106,16 +106,9 @@
 			  <parent>base_link</parent>
 			  <child>body</child>
 		  </joint>
-      <joint name='chin_joint' type='revolute'>
-			  <parent>base_link</parent>
-			  <child>chin</child>
-			  <axis>
-			    <xyz expressed_in="__model__">0 0 1</xyz>
-			    <limit>
-			      <lower>-1</lower>
-			      <upper>1</upper>
-			    </limit>
-			  </axis>		      
+      <joint name='chin_joint' type='fixed'>
+			  <parent>body</parent>
+			  <child>chin</child>		      
 		  </joint>
 		  <joint name='head_joint' type='fixed'>
 			  <parent>chin</parent>
