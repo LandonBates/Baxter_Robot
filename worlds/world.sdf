@@ -86,15 +86,11 @@
       </spot>
     </light>
   <model name="baxter">
+  <self_collide>true</self_collide>
+  <pose>0 0 0 0 0 0</pose>
   <include>
     <uri>file://models/baxter/baxter.sdf</uri>
-  </include>
-  </model>
-  <model name="april_car">
-  <include>
-    <uri>file://models/car/april_car.sdf</uri>
-    <pose>2 0 0 0 0 0</pose>
-  </include>
+  </include>   
   </model>
   </world>
 </sdf>
