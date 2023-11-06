@@ -128,7 +128,7 @@
 			    </limit>
 			  </axis>
 		  </joint>
-		  	  <link name='camera_body'>
+		<link name='camera_body'>
 		  <pose relative_to='head'>0.055 0.08 0 0 0 0</pose>
 		  <visual name='visual'>
 			  <pose>0 0 0 0 0 0</pose>
