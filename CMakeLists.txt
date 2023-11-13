@@ -52,4 +52,9 @@ install(
   DESTINATION share/${PROJECT_NAME}/worlds
 )
 
+install(PROGRAMS
+  scripts/executive.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_package()

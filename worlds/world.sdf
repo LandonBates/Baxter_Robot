@@ -70,7 +70,7 @@
   </model>
   <model name="car">
   <self_collide>true</self_collide>
-  <pose>0 5 0.6 0 0 0</pose>
+  <pose>5 0 0.6 0 0 0</pose>
   <include>
     <uri>file://models/car/model.sdf</uri>
   </include>

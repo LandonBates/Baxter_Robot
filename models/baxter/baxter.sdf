@@ -95,6 +95,9 @@
 				  <upper>1.6</upper>
 				  <lower>-1.6</lower>
 				</limit>
+				<dynamics>
+				  <friction>1</friction>
+				</dynamics>
 			</axis>     
 		  </joint>
 		  <joint name='head_joint' type='revolute'>
@@ -106,6 +109,9 @@
 			      <upper>0.1</upper>
 			      <lower>-0.5</lower>
 			    </limit>
+			    <dynamics>
+				    <friction>1</friction>
+				  </dynamics>
 			  </axis>
 		  </joint>
 		<link name='camera_body'>
@@ -140,7 +146,7 @@
 		  </sensor>
 	  </link>
 	  <link name='camera'>
-		  <pose relative_to="camera_body">0 0 0 0 0 0</pose>
+		  <pose relative_to="camera_body">0 0 0 0 1.57 0</pose>
 	  </link>
 	  <joint name='camera_optical_joint' type='fixed'>
 		  <parent>camera_body</parent>

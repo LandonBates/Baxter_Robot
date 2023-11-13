@@ -55,6 +55,11 @@ def generate_launch_description():
         ],
         parameters=[robot_path+"/config/apriltags.yaml"]
     )
+
+    executive = Node(
+      package = 'robot',
+      executable = 'executive.py',
+    )
         
     sdf_file = os.path.join(robot_path, 'models', 'baxter', 'baxter.sdf')
     with open(sdf_file, 'r') as infp:
@@ -96,6 +101,8 @@ def generate_launch_description():
         SetEnvironmentVariable(name='GZ_SIM_RESOURCE_PATH', value=robot_path),
         SetParameter(name='use_sim_time', value=True),
         robot_state_publisher,
+        apriltags,
+        executive,
         gz_sim,
         bridge,
         rviz,
