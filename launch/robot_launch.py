@@ -19,16 +19,19 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+from launch_ros.actions import SetParameter
 
 from launch_ros.actions import Node
 
 def generate_launch_description():
+    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     robot_path = get_package_share_directory('robot')
     
-    sdf_file = os.path.join(robot_path, 'models', 'baxter', 'baxter.sdf')
-
-    with open(sdf_file, 'r') as infp:
-        robot_desc = infp.read()
+    gz_sim = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
+         launch_arguments={'gz_args': '-r '+os.path.join(robot_path,'worlds/world.sdf')}.items(),
+    )
         
     #camera = Node(
     #    package='usb_cam',
@@ -52,8 +55,31 @@ def generate_launch_description():
         ],
         parameters=[robot_path+"/config/apriltags.yaml"]
     )
+        
+    sdf_file = os.path.join(robot_path, 'models', 'baxter', 'baxter.sdf')
+    with open(sdf_file, 'r') as infp:
+        robot_desc = infp.read()
+   
+    bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/camera@sensor_msgs/msg/Image[gz.msgs.Image',
+            '/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
+            '/pan_cmd@std_msgs/msg/Float64]gz.msgs.Double',
+            '/tilt_cmd@std_msgs/msg/Float64]gz.msgs.Double',
+            '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
+            '/world/empty/model/baxter/model/Baxter/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model',
 
-    # Get the parser plugin convert sdf to urdf using robot_description topic
+        ],
+        remappings=[
+            ('/world/empty/model/baxter/model/Baxter/joint_state', 'joint_states'),
+        ],
+
+        output=['screen']
+    )
+    
+        # Get the parser plugin convert sdf to urdf using robot_description topic
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -65,31 +91,13 @@ def generate_launch_description():
         ]
     )
     
-    joint_state_publisher_gui = Node(
-        package='joint_state_publisher_gui',
-        executable='joint_state_publisher_gui',
-        name='joint_state_publisher_gui',
-        arguments=[sdf_file],
-        output=['screen']
-    )
-        
-    bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        arguments=[
-            'camera@sensor_msgs/msg/Image[gz.msgs.Image',
-            'camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
-        ],
-        output=['screen']
-    )
 
     return LaunchDescription([
-        #camera,
-        SetEnvironmentVariable(name="GZ_SIM_RESOURCE_PATH", value=robot_path),
-        apriltags,
-        bridge,
+        SetEnvironmentVariable(name='GZ_SIM_RESOURCE_PATH', value=robot_path),
+        SetParameter(name='use_sim_time', value=True),
         robot_state_publisher,
-        joint_state_publisher_gui,
-        rviz
+        gz_sim,
+        bridge,
+        rviz,
     ])
 
