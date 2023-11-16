@@ -17,6 +17,7 @@ class executive(Node):
     self.current_pan = 0.0 
     self.tilt_msg = Float64()
     self.current_tilt = 0.0
+    self.leftright = True
     self.pub_pan_cmd = self.create_publisher(Float64, 'pan_cmd', 10)
     self.pub_tilt_cmd = self.create_publisher(Float64, 'tilt_cmd', 10)
     self.sub_detections = self.create_subscription(AprilTagDetectionArray,
@@ -61,7 +62,20 @@ class executive(Node):
       else:
         self.tilt_msg.data = self.current_tilt
       self.pub_tilt_cmd.publish(self.tilt_msg)
-
+    
+    if len(msg.detections) == 0:
+      self.get_logger().info("no apriltag detected: searching...")
+      
+      if (self.current_pan >= 1.6) or (self.current_pan <= -1.6):
+        self.leftright = not self.leftright
+      
+      if (self.leftright):
+        self.pan_msg.data = self.current_pan + 0.25
+      else:
+        self.pan_msg.data = self.current_pan - 0.25
+        
+      self.pub_pan_cmd.publish(self.pan_msg)
+      
 def main(args=None):
 
   rclpy.init(args=args)
