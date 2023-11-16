@@ -55,16 +55,16 @@ class executive(Node):
       self.get_logger().info("detected apriltag at x={:f} y={:f}".format(
         t.transform.translation.x,t.transform.translation.y))
         
-      if (self.april_x > 0.01):
-        self.pan_msg.data = self.current_pan + self.april_x 
-      elif (self.april_x < -0.01):
-        self.pan_msg.data = self.current_pan - self.april_x 
+      if (self.april_x > 0.05) or (self.april_x < -0.05):
+        self.pan_msg.data = self.current_pan - self.april_x
+      else:
+        self.pan_msg.data = self.current_pan
       self.pub_pan_cmd.publish(self.pan_msg)
 
-      if (self.april_y > 0.01):
+      if (self.april_y > 0.05):
         self.tilt_msg.data = self.current_tilt - self.april_y 
-      elif (self.april_y < -0.01):
-        self.tilt_msg.data = self.current_tilt + self.april_y
+      else:
+        self.tilt_msg.data = self.current_tilt
       self.pub_tilt_cmd.publish(self.tilt_msg)
 def main(args=None):
 
