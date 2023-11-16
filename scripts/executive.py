@@ -4,17 +4,11 @@ from rclpy.node import Node
 
 from std_msgs.msg import String
 from std_msgs.msg import Float64
-from geometry_msgs.msg import Pose
 from apriltag_msgs.msg import AprilTagDetectionArray
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
-from enum import Enum
 from sensor_msgs.msg import JointState
-
-class State(Enum):
-  PAN=0
-  TRACK=1
 
 class executive(Node):
   def __init__(self):
@@ -50,22 +44,24 @@ class executive(Node):
         self.get_logger().info(
           f'Could not transform {to_frame} to {from_frame}')
         return
+
       self.april_x = t.transform.translation.x
       self.april_y = t.transform.translation.y
       self.get_logger().info("detected apriltag at x={:f} y={:f}".format(
         t.transform.translation.x,t.transform.translation.y))
         
-      if (self.april_x > 0.05) or (self.april_x < -0.05):
+      if (self.april_x > 0.025) or (self.april_x < -0.025):
         self.pan_msg.data = self.current_pan - self.april_x
       else:
         self.pan_msg.data = self.current_pan
       self.pub_pan_cmd.publish(self.pan_msg)
 
-      if (self.april_y > 0.05):
+      if (self.april_y > 0.025) or (self.april_y < -0.025):
         self.tilt_msg.data = self.current_tilt - self.april_y 
       else:
         self.tilt_msg.data = self.current_tilt
       self.pub_tilt_cmd.publish(self.tilt_msg)
+
 def main(args=None):
 
   rclpy.init(args=args)
