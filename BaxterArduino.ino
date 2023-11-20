@@ -22,14 +22,14 @@ int brakePinNod = 8;
 bool directionState;
 
 // limit switches
-int limitLeft = 7;
 int limitRight = 4;
 int limitNod = 2;
 
 int limitLeftState;
 int limitRightState;
 int limitNodState;
-
+int newlimitRightState;
+int newlimitNodState;
 
 void setup() {
 
@@ -54,7 +54,7 @@ pinMode(pwmPinNod, OUTPUT);
 
 pinMode(brakePinNod, OUTPUT);
 
-pinMode(limitLeft, INPUT);
+
 pinMode(limitRight, INPUT);
 pinMode(limitNod, INPUT);
 
@@ -63,64 +63,42 @@ pinMode(limitNod, INPUT);
 
 void loop() {
 String commandString = Serial.readString();
-Serial.println(commandString);
+//Serial.println(commandString);
 int l = commandString.length();
-if (l> 1)
-{
-  Serial.println(l);
-
 for(i=0;l>i; i++)
 {
-int newlimitLeftState=digitalRead(limitLeft);
-int newlimitRightState=digitalRead(limitRight);
-int newlimitNodState=digitalRead(limitNod);
+newlimitRightState=digitalRead(limitRight);
+newlimitNodState=digitalRead(limitNod);
   char command = commandString[i];
   Serial.println(command);
   if( command == 'w')
   {
     digitalWrite(directionPinNod, HIGH);
     digitalWrite(pwmPinNod,5);
-    delay(50);
+    delay(5);
     digitalWrite(pwmPinNod,0);
   }
   if( command == 's')
   {
     digitalWrite(directionPinNod, LOW);
     digitalWrite(pwmPinNod,5);
-    delay(50);
+    delay(5);
     digitalWrite(pwmPinNod,0);
   }
   if( command == 'a')
   {
     digitalWrite(directionPinTurn, HIGH);
     digitalWrite(pwmPinTurn,100);
-    delay(10);
+    delay(5);
     digitalWrite(pwmPinTurn,0);
   }
   if (command == 'd')
   {
     digitalWrite(directionPinTurn, LOW);
     digitalWrite(pwmPinTurn,100);
-    delay(10);
+    delay(5);
     digitalWrite(pwmPinTurn,0);
   }
-  if (newlimitLeftState== HIGH)
- {
-   
-   if(newlimitLeftState != limitLeftState)
-   {
-     digitalWrite(brakePinTurn, HIGH);
-     digitalWrite(pwmPinTurn,0);
-     limitLeftState = newlimitLeftState;
-     break;
-   }
- }
- else
- {
-   
-   analogWrite(pwmPinTurn, 20);
-
- }
  if (newlimitRightState== HIGH)
  {
    
@@ -133,11 +111,6 @@ int newlimitNodState=digitalRead(limitNod);
    }
   
  }
- else
- {
-   
-   analogWrite(pwmPinTurn, 20);
- }
  if (newlimitNodState== HIGH)
  {
   
@@ -149,14 +122,8 @@ int newlimitNodState=digitalRead(limitNod);
      break;
    }
  }
-}
 
-   if (newlimitLeftState== HIGH)
- {
-   Serial.print("1,");
-   }else{
-   Serial.print("0,");
-   }
+}
 if (newlimitRightState== HIGH)
  {
    Serial.print("1,");
@@ -166,7 +133,9 @@ Serial.print("0,");
  if (newlimitNodState== HIGH)
  {
    Serial.println("1");
-   }else(Serial.println"0");}
+   }else{
+    Serial.println("0");
+    }
 
 }
 
@@ -181,9 +150,3 @@ Serial.print("0,");
 
 
  
-
-
-
-
-
-}

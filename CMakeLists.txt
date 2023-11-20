@@ -54,6 +54,7 @@ install(
 
 install(PROGRAMS
   scripts/executive.py
+  scripts/arduino.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
