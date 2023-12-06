@@ -54,6 +54,10 @@ install(
 
 install(PROGRAMS
   scripts/executive.py
+  scripts/arduino.py
+  scripts/apriltag_executive.py
+  scripts/facedetect_executive.py
+  scripts/objectDetection.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
